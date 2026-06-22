@@ -481,17 +481,22 @@ SCORING RULES (be honest, not generous):
 - remoteScore: max 10 — 10=fully remote, 7=hybrid, 3=onsite Chicago, 1=onsite elsewhere
 - advancementScore: max 8 — growth potential toward VP/executive track
 
-Only include roles that score at least 55 total. Be strict. Do not include youth director, synagogue educator, or entry-level roles. If salary is not listed, estimate based on org size and role level.
+Only include roles that score at least 30 total. Be strict. Do not include youth director, synagogue educator, or entry-level roles. If salary is not listed, estimate based on org size and role level.
 
 Return ONLY the JSON array. No other text.`;
 
   statusEl.innerHTML = '<span class="spinner"></span> Searching JewishJobs, Idealist, ADL, Hillel, AJC careers pages...';
 
   try {
-    const response = await fetch('/api/search', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt })
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        tools: [{"type": "web_search_20250305", "name": "web_search"}],
+        messages: [{role:'user', content: prompt}]
+      })
     });
 
     const data = await response.json();

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Stacy La Mell — Career Intelligence</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0f1117;color:#e8eaf0;font-family:'IBM Plex Mono',monospace;font-size:13px;min-height:100vh}
+  button{cursor:pointer;font-family:inherit}
+  input,select,textarea{font-family:inherit;outline:none}
+
+  /* HEADER */
+  #header{background:#171b26;border-bottom:1px solid #2a3148;padding:18px 28px 14px}
+  #header-inner{display:flex;justify-content:space-between;align-items:flex-start}
+  #header h1{font-size:20px;font-weight:700;color:#00C9B1;letter-spacing:1px;font-family:Georgia,serif}
+  #header .sub{color:#C8974A;font-size:11px;margin-top:2px;letter-spacing:2px}
+  .hkpi{text-align:right}
+  .hkpi .num{font-weight:700;font-size:16px}
+  .hkpi .lbl{color:#7a8099;font-size:10px}
+  #header-kpis{display:flex;gap:20px;font-size:11px}
+
+  /* TABS */
+  #tabbar{display:flex;gap:2px;background:#171b26;padding:0 20px;border-bottom:1px solid #2a3148}
+  .tab-btn{padding:10px 18px;font-size:11px;letter-spacing:1.5px;font-weight:400;color:#7a8099;background:none;border:none;border-bottom:2px solid transparent;transition:all 0.15s}
+  .tab-btn.active{color:#00C9B1;font-weight:700;border-bottom:2px solid #00C9B1}
+
+  /* BODY */
+  #body{padding:24px 28px}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+
+  /* CARDS */
+  .card{background:#1e2435;border:1px solid #2a3148;border-radius:6px;padding:16px 20px;margin-bottom:14px}
+  .section-title{color:#C8974A;font-size:11px;letter-spacing:3px;font-weight:700;margin-bottom:16px;text-transform:uppercase;border-bottom:1px solid #2a3148;padding-bottom:8px}
+  .muted{color:#7a8099}
+  .label{color:#7a8099;font-size:10px;letter-spacing:2px;margin-bottom:4px}
+
+  /* BADGES */
+  .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;letter-spacing:1px;font-weight:700}
+
+  /* INPUTS */
+  input[type=text],input[type=date],input[type=number],select,textarea{
+    background:#171b26;border:1px solid #2a3148;border-radius:4px;
+    color:#e8eaf0;padding:7px 10px;font-size:12px;width:100%
+  }
+  textarea{resize:vertical}
+
+  /* BUTTONS */
+  .btn-teal{background:#00C9B122;color:#00C9B1;border:1px solid #00C9B155;border-radius:4px;padding:6px 14px;font-size:11px;letter-spacing:1px;font-weight:600}
+  .btn-gold{background:#C8974A22;color:#C8974A;border:1px solid #C8974A55;border-radius:4px;padding:6px 14px;font-size:11px;letter-spacing:1px;font-weight:600}
+  .btn-muted{background:#7a809922;color:#7a8099;border:1px solid #7a809955;border-radius:4px;padding:6px 14px;font-size:11px;letter-spacing:1px;font-weight:600}
+  .btn-sm{padding:3px 8px;font-size:9px}
+
+  /* SCORE BAR */
+  .score-wrap{display:flex;align-items:center;gap:8px}
+  .score-track{flex:1;height:4px;background:#2a3148;border-radius:2px}
+  .score-fill{height:100%;border-radius:2px;transition:width 0.3s}
+  .score-num{font-weight:700;font-size:12px;padding:2px 8px;border-radius:3px}
+
+  /* GRID HELPERS */
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid-7{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  .flex{display:flex}
+  .flex-wrap{display:flex;flex-wrap:wrap}
+  .gap-8{gap:8px}
+  .gap-10{gap:10px}
+  .gap-12{gap:12px}
+  .gap-16{gap:16px}
+  .gap-20{gap:20px}
+  .mb-8{margin-bottom:8px}
+  .mb-10{margin-bottom:10px}
+  .mb-12{margin-bottom:12px}
+  .mb-14{margin-bottom:14px}
+  .mb-16{margin-bottom:16px}
+  .mb-20{margin-bottom:20px}
+  .mt-4{margin-top:4px}
+  .mt-6{margin-top:6px}
+  .mt-8{margin-top:8px}
+  .mt-10{margin-top:10px}
+  .mt-12{margin-top:12px}
+  .mt-20{margin-top:20px}
+  .f-right{text-align:right}
+  .fw-700{font-weight:700}
+  .f-12{font-size:12px}
+  .f-11{font-size:11px}
+  .f-10{font-size:10px}
+  .f-16{font-size:16px}
+  .f-28{font-size:28px}
+  .lh-15{line-height:1.5}
+
+  /* STAT CARDS */
+  .stat-cards{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+  .stat-card{background:#1e2435;border:1px solid #2a3148;border-radius:6px;padding:14px 18px;flex:1;min-width:140px}
+  .stat-num{font-size:28px;font-weight:700;line-height:1.1}
+  .stat-lbl{color:#7a8099;font-size:10px;letter-spacing:2px;margin-top:4px}
+
+  /* SALARY LEGEND */
+  .legend{display:flex;gap:16px;margin-bottom:14px}
+  .legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+
+  /* SKILLS BARS */
+  .skill-bar-track{flex:1;height:6px;background:#2a3148;border-radius:2px}
+  .skill-bar-fill{height:100%;border-radius:2px}
+
+  /* FORM SECTION */
+  .form-card{background:#1e2435;border:1px solid #00C9B144;border-radius:6px;padding:16px 20px;margin-bottom:20px}
+  .form-title{color:#00C9B1;font-size:11px;letter-spacing:2px;margin-bottom:12px}
+
+  /* JOB CARD */
+  .job-card{background:#1e2435;border-radius:6px;padding:16px 20px;margin-bottom:14px;border-right:1px solid #2a3148;border-top:1px solid #2a3148;border-bottom:1px solid #2a3148}
+  .job-title{font-weight:700;font-size:14px;margin-bottom:2px}
+  .job-org{color:#C8974A;font-size:12px}
+  .job-loc{color:#7a8099;font-size:11px;margin-top:4px}
+  .job-salary{font-size:16px;font-weight:700}
+  .status-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+
+  /* ORG CARD */
+  .org-card{background:#1e2435;border-radius:6px;padding:16px 20px;margin-bottom:14px;border-right:1px solid #2a3148;border-top:1px solid #2a3148;border-bottom:1px solid #2a3148}
+
+  /* FILTER ROW */
+  .filter-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+
+  /* AUTOMATION CARD */
+  .auto-item{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #2a3148}
+  .auto-source{font-weight:700;color:#00C9B1;font-size:11px;margin-bottom:3px}
+  .auto-tip{color:#7a8099;font-size:11px;line-height:1.5}
+
+  /* HIDE */
+  .hidden{display:none!important}
+
+  /* CHECKBOX */
+  .check-label{color:#7a8099;font-size:11px;display:flex;align-items:center;gap:6px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div id="header-inner">
+    <div>
+      <h1>STACY LA MELL — CAREER INTELLIGENCE</h1>
+      <div class="sub">12-MONTH STRATEGIC TRANSITION · TARGET: $80K+ DIRECTOR-LEVEL · JUNE 2026</div>
+    </div>
+    <div id="header-kpis">
+      <div class="hkpi"><div class="num" id="kpi-green" style="color:#22c55e">0</div><div class="lbl">$80K+ FOUND</div></div>
+      <div class="hkpi"><div class="num" id="kpi-apply" style="color:#eab308">0</div><div class="lbl">READY TO APPLY</div></div>
+      <div class="hkpi"><div class="num" id="kpi-applied" style="color:#00C9B1">0</div><div class="lbl">APPLIED</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div id="tabbar">
+  <button class="tab-btn active" onclick="switchTab(0)">OPPORTUNITIES</button>
+  <button class="tab-btn" onclick="switchTab(1)">DREAM 50</button>
+  <button class="tab-btn" onclick="switchTab(2)">APPLICATIONS</button>
+  <button class="tab-btn" onclick="switchTab(3)">ANALYTICS</button>
+  <button class="tab-btn" onclick="switchTab(4)">SKILLS</button>
+</div>
+
+<div id="body">
+
+<!-- TAB 0: OPPORTUNITIES -->
+<div class="tab-panel active" id="panel-0">
+  <div class="flex" style="justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div class="section-title" style="margin-bottom:0">LIVE OPPORTUNITIES</div>
+    <div class="flex gap-10" style="align-items:center">
+      <label class="check-label"><input type="checkbox" id="hide70" checked onchange="renderJobs()"> Hide &lt;$70k</label>
+      <button class="btn-teal" onclick="toggleJobForm()">+ ADD OPPORTUNITY</button>
+    </div>
+  </div>
+
+  <div class="filter-row" id="theme-filters"></div>
+
+  <div id="job-form" class="form-card hidden">
+    <div class="form-title">NEW OPPORTUNITY</div>
+    <div class="grid-3">
+      <div><div class="label">ORGANIZATION</div><input type="text" id="f-org"></div>
+      <div><div class="label">POSITION TITLE</div><input type="text" id="f-pos"></div>
+      <div><div class="label">LOCATION</div><input type="text" id="f-loc"></div>
+      <div><div class="label">SALARY (number)</div><input type="number" id="f-sal"></div>
+      <div><div class="label">DEADLINE</div><input type="date" id="f-dead"></div>
+      <div><div class="label">DATE FOUND</div><input type="date" id="f-date"></div>
+      <div><div class="label">REMOTE/HYBRID/ONSITE</div>
+        <select id="f-remote"><option>Remote</option><option>Hybrid</option><option>Onsite</option></select></div>
+      <div><div class="label">CAREER THEME</div>
+        <select id="f-theme">
+          <option>AI Literacy</option><option>Jewish Communal</option>
+          <option>Educational Innovation</option><option>Strategic Communications</option><option>Nonprofit Leadership</option>
+        </select></div>
+      <div><div class="label">STATUS</div>
+        <select id="f-status">
+          <option>Watch</option><option>Apply</option><option>Applied</option>
+          <option>Interview</option><option>Finalist</option><option>Closed</option><option>Rejected</option><option>Offer</option>
+        </select></div>
+    </div>
+    <div class="mb-10"><div class="label">NOTES</div><textarea id="f-notes" style="height:60px"></textarea></div>
+    <div class="mb-12">
+      <div class="label mb-8">FIT SCORE INPUTS</div>
+      <div class="grid-7">
+        <div><div class="label">SALARY /25</div><input type="number" id="fs-sal" value="20" min="0" max="25" style="width:60px"></div>
+        <div><div class="label">MISSION /20</div><input type="number" id="fs-mis" value="15" min="0" max="20" style="width:60px"></div>
+        <div><div class="label">LEADER /15</div><input type="number" id="fs-lead" value="12" min="0" max="15" style="width:60px"></div>
+        <div><div class="label">AI /12</div><input type="number" id="fs-ai" value="8" min="0" max="12" style="width:60px"></div>
+        <div><div class="label">JEWISH /10</div><input type="number" id="fs-jew" value="8" min="0" max="10" style="width:60px"></div>
+        <div><div class="label">REMOTE /10</div><input type="number" id="fs-rem" value="8" min="0" max="10" style="width:60px"></div>
+        <div><div class="label">GROWTH /8</div><input type="number" id="fs-adv" value="6" min="0" max="8" style="width:60px"></div>
+      </div>
+    </div>
+    <div class="flex gap-8">
+      <button class="btn-teal" onclick="saveJob()">SAVE</button>
+      <button class="btn-muted" onclick="toggleJobForm()">CANCEL</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="legend-dot" style="background:#22c55e"></span><span class="f-10 muted">$80k+ Target</span></span>
+    <span><span class="legend-dot" style="background:#eab308"></span><span class="f-10 muted">$70–79k Acceptable</span></span>
+    <span><span class="legend-dot" style="background:#ef4444"></span><span class="f-10 muted">&lt;$70k Hidden</span></span>
+  </div>
+
+  <div id="jobs-list"></div>
+</div>
+
+<!-- TAB 1: DREAM 50 -->
+<div class="tab-panel hidden" id="panel-1">
+  <div class="section-title">DREAM 50 — ORGANIZATION INTELLIGENCE</div>
+  <div class="filter-row" id="rel-filters"></div>
+  <div id="orgs-list"></div>
+</div>
+
+<!-- TAB 2: APPLICATIONS -->
+<div class="tab-panel hidden" id="panel-2">
+  <div class="flex" style="justify-content:space-between;margin-bottom:16px">
+    <div class="section-title" style="margin-bottom:0">APPLICATION TRACKER</div>
+    <button class="btn-teal" onclick="toggleAppForm()">+ LOG APPLICATION</button>
+  </div>
+  <div id="app-form" class="form-card hidden">
+    <div class="grid-3">
+      <div><div class="label">POSITION</div>
+        <select id="af-job"><option value="">Select...</option></select></div>
+      <div><div class="label">DATE APPLIED</div><input type="date" id="af-date"></div>
+      <div><div class="label">FOLLOW-UP DATE</div><input type="date" id="af-followup"></div>
+      <div><div class="label">INTERVIEW DATES</div><input type="text" id="af-interviews" placeholder="e.g. 2026-07-10"></div>
+      <div><div class="label">OUTCOME</div>
+        <select id="af-outcome">
+          <option value="">Pending</option><option>Interview</option><option>Finalist</option>
+          <option>Offer</option><option>Rejected</option><option>Withdrawn</option>
+        </select></div>
+    </div>
+    <div><div class="label">LESSONS LEARNED</div><textarea id="af-lessons" style="height:60px"></textarea></div>
+    <div class="flex gap-8 mt-10">
+      <button class="btn-teal" onclick="saveApp()">SAVE</button>
+      <button class="btn-muted" onclick="toggleAppForm()">CANCEL</button>
+    </div>
+  </div>
+  <div id="apps-list"></div>
+</div>
+
+<!-- TAB 3: ANALYTICS -->
+<div class="tab-panel hidden" id="panel-3">
+  <div class="section-title">CAREER ANALYTICS</div>
+  <div class="stat-cards" id="stat-cards"></div>
+  <div class="card mb-20" id="salary-tiers"></div>
+  <div class="grid-2" id="analytics-grids"></div>
+</div>
+
+<!-- TAB 4: SKILLS -->
+<div class="tab-panel hidden" id="panel-4">
+  <div class="section-title">SKILLS INTELLIGENCE — MARKET DEMAND VS YOUR PROFILE</div>
+  <div id="skills-legend" class="flex flex-wrap gap-10 mb-16"></div>
+  <div id="skills-list"></div>
+  <div class="card mt-20" style="border:1px solid #C8974A44">
+    <div style="color:#C8974A;font-size:11px;letter-spacing:2px;margin-bottom:12px">AUTOMATION RECOMMENDATIONS</div>
+    <div class="auto-item"><div class="auto-source">LinkedIn Jobs</div><div class="auto-tip">Search: 'Director AI Literacy' · 'Director Jewish Education' · 'Program Director information integrity' — Set email alerts, weekly.</div></div>
+    <div class="auto-item"><div class="auto-source">JewishJobs.com</div><div class="auto-tip">Monitor weekly. Filter: Director-level, $70k+. Best source for federation + Hillel + synagogue director roles.</div></div>
+    <div class="auto-item"><div class="auto-source">Idealist.org</div><div class="auto-tip">Monitor: 'Director of Education' + 'AI' + 'Jewish'. Set category: Social Justice, Education.</div></div>
+    <div class="auto-item"><div class="auto-source">Chronicle of Philanthropy</div><div class="auto-tip">Job board for senior nonprofit roles. Filter: Director, $80k+, remote.</div></div>
+    <div class="auto-item"><div class="auto-source">ADL / AJC / Hillel Careers pages</div><div class="auto-tip">Bookmark all three. Check weekly. Set browser bookmarks folder: 'Weekly Career Check'.</div></div>
+    <div class="auto-item" style="border-bottom:none;margin-bottom:0;padding-bottom:0"><div class="auto-source">Google Alerts</div><div class="auto-tip">Set alerts for: 'AI literacy director job' · 'Jewish community director opening' · 'HevrutAI' (track your own brand).</div></div>
+  </div>
+</div>
+
+</div><!-- /body -->
+
+<script>
+// ── COLORS ──────────────────────────────────────────────────────────────────
+const C = {
+  teal:'#00C9B1', gold:'#C8974A', text:'#e8eaf0', muted:'#7a8099',
+  green:'#22c55e', yellow:'#eab308', red:'#ef4444', blue:'#60a5fa',
+  purple:'#a78bfa', border:'#2a3148', surface:'#171b26', card:'#1e2435'
+};
+
+const STATUS_COLORS = {
+  Watch:'#60a5fa', Apply:'#f59e0b', Applied:'#a78bfa', Interview:'#34d399',
+  Finalist:'#10b981', Closed:'#6b7280', Rejected:'#ef4444', Offer:'#22c55e'
+};
+
+const PRIORITY_COLORS = {
+  Unique:'#a78bfa', Differentiated:'#00C9B1', Strength:'#22c55e',
+  Adequate:'#eab308', Gap:'#f97316', Skip:'#6b7280'
+};
+
+const THEMES = ['All','AI Literacy','Jewish Communal','Educational Innovation','Strategic Communications','Nonprofit Leadership'];
+const REL_OPTIONS = ['All','Cold','Warm','Active','Met','Applied'];
+const STATUS_OPTIONS = ['Watch','Apply','Applied','Interview','Finalist','Closed','Rejected','Offer'];
+
+// ── LOCAL STORAGE ────────────────────────────────────────────────────────────
+function lsLoad(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch { return fallback; }
+}
+function lsSave(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+}
+
+// ── SEED DATA ────────────────────────────────────────────────────────────────
+const SEED_JOBS = [
+  {id:1,dateFound:'2026-06-18',org:'ADL',position:'Director of AI Advocacy',salary:95000,location:'New York, NY / Remote',remote:'Remote',theme:'AI Literacy',deadline:'',status:'Watch',notes:'Posting closed before application — package ready. Repost likely. Monitor monthly.',salaryScore:25,missionScore:20,leadershipScore:15,aiScore:12,jewishScore:10,remoteScore:10,advancementScore:8},
+  {id:2,dateFound:'2026-06-18',org:'Hillel International',position:'Director of Jewish Innovation',salary:85000,location:'Washington, DC / Hybrid',remote:'Hybrid',theme:'Jewish Communal',deadline:'',status:'Watch',notes:'Strong mission fit. Track for openings. Reach out through network.',salaryScore:22,missionScore:18,leadershipScore:15,aiScore:6,jewishScore:10,remoteScore:7,advancementScore:8},
+  {id:3,dateFound:'2026-06-18',org:'Facing History & Ourselves',position:'Senior Program Director',salary:90000,location:'Remote',remote:'Remote',theme:'Educational Innovation',deadline:'',status:'Watch',notes:'Curriculum + Holocaust education + director level. Strong fit. Monitor.',salaryScore:23,missionScore:17,leadershipScore:15,aiScore:5,jewishScore:8,remoteScore:10,advancementScore:7}
+];
+
+const SEED_ORGS = [
+  {org:'ADL (Anti-Defamation League)',mission:'Counter antisemitism, hate, and extremism through education, advocacy, and law enforcement partnerships.',contacts:'Rebecca Weininger (ADL Midwest)',relationshipStatus:'Warm',actions:'Glass Leadership alum — reconnect via Rebecca',lastContact:'2024-06',notes:'ADL Director of AI Advocacy role closed before application; package ready to reuse.'},
+  {org:'American Jewish Committee (AJC)',mission:'Advocacy for Jewish people and democratic values globally.',contacts:'',relationshipStatus:'Cold',actions:'Identify AI/education program staff',lastContact:'',notes:''},
+  {org:'Hillel International',mission:'Enrich the lives of Jewish students worldwide.',contacts:'',relationshipStatus:'Cold',actions:'Research Director of Innovation / AI Literacy openings',lastContact:'',notes:''},
+  {org:'Jewish Federations of North America',mission:'Network of 146 federations supporting Jewish communities worldwide.',contacts:'',relationshipStatus:'Cold',actions:'Track Director of Education / Innovation listings',lastContact:'',notes:''},
+  {org:'American Technion Society',mission:'Support Israel\'s Technion Institute of Technology, foster US-Israel tech connections.',contacts:'Mark Gaines',relationshipStatus:'Warm',actions:'Reconnect — frame HevrutAI as Technion-adjacent information integrity work',lastContact:'',notes:''},
+  {org:'Hillel Fuld (Israeli Tech Ecosystem)',mission:'Bridge Israeli tech startups with international partners.',contacts:'Hillel Fuld',relationshipStatus:'Warm',actions:'Reconnect re: HevrutAI as operational tool + TevAI vision',lastContact:'2026-03',notes:'Prior aliyah conversation March 2026.'},
+  {org:'USC Shoah Foundation',mission:'Preserve Holocaust testimony and advance education against hatred.',contacts:'',relationshipStatus:'Cold',actions:'Research program director / AI literacy roles',lastContact:'',notes:'Family testimony archived here — personal connection.'},
+  {org:'Facing History & Ourselves',mission:'Engage students and teachers in examining prejudice and moral decision-making.',contacts:'',relationshipStatus:'Cold',actions:'Track Senior Program / Curriculum roles',lastContact:'',notes:''},
+  {org:'iCenter for Israel Education',mission:'Transform Israel education in North America.',contacts:'',relationshipStatus:'Cold',actions:'Research Director of Programs / Innovation',lastContact:'',notes:''},
+  {org:'Reboot',mission:'Inspire Jewish cultural creativity among next generation.',contacts:'',relationshipStatus:'Cold',actions:'Track strategic / program director listings',lastContact:'',notes:''},
+  {org:'OpenAI',mission:'Ensure artificial general intelligence benefits all of humanity.',contacts:'',relationshipStatus:'Cold',actions:'Track Trust & Safety / Policy / AI Literacy roles',lastContact:'',notes:''},
+  {org:'Google (Trust & Safety)',mission:'Protect Google users and products from abuse and policy violations.',contacts:'',relationshipStatus:'Cold',actions:'Track policy / content integrity specialist roles',lastContact:'',notes:''},
+  {org:'Meta (Content Policy)',mission:'Connect the world; govern content integrity at scale.',contacts:'',relationshipStatus:'Cold',actions:'Track Community Standards / Policy roles',lastContact:'',notes:''},
+  {org:'Center for Democracy & Technology',mission:'Promote democratic values in tech policy.',contacts:'',relationshipStatus:'Cold',actions:'Track AI Policy / Civic Tech roles',lastContact:'',notes:''},
+  {org:'Partnership for AI',mission:'Responsible AI development across industry, academia, civil society.',contacts:'',relationshipStatus:'Cold',actions:'Track program / communications roles',lastContact:'',notes:''},
+  {org:'Aspen Institute',mission:'Foster values-based leadership and cross-sector dialogue.',contacts:'',relationshipStatus:'Cold',actions:'Track Digital Citizenship / AI roles',lastContact:'',notes:''},
+  {org:'Jewish Theological Seminary',mission:'Conservative Jewish scholarship and educator training.',contacts:'',relationshipStatus:'Cold',actions:'Research Director of Continuing Education',lastContact:'',notes:''},
+  {org:'Spertus Institute',mission:'Jewish professional and leadership development in Chicago.',contacts:'',relationshipStatus:'Cold',actions:'Research Director of Programs — Chicago hybrid',lastContact:'',notes:''},
+  {org:'Northwestern University — Block Museum / Jewish Studies',mission:'Academic research, public humanities.',contacts:'',relationshipStatus:'Cold',actions:'Track public programming / educator-in-residence roles',lastContact:'',notes:''},
+  {org:'Chicago Council on Global Affairs',mission:'Inform public and policy leaders on global issues.',contacts:'',relationshipStatus:'Cold',actions:'Track Education / Public Engagement director roles',lastContact:'',notes:''}
+];
+
+const SKILLS_DATA = [
+  {skill:'Program Management',market:92,yours:95,priority:'Strength'},
+  {skill:'Curriculum Design',market:78,yours:97,priority:'Strength'},
+  {skill:'Public Speaking / Facilitation',market:71,yours:92,priority:'Strength'},
+  {skill:'Community Engagement',market:85,yours:90,priority:'Strength'},
+  {skill:'AI Literacy (non-technical)',market:88,yours:95,priority:'Differentiated'},
+  {skill:'Strategic Communications',market:76,yours:80,priority:'Strength'},
+  {skill:'Nonprofit Leadership',market:89,yours:85,priority:'Strength'},
+  {skill:'Antisemitism Education',market:42,yours:99,priority:'Differentiated'},
+  {skill:'Holocaust Testimony / Descendant Voice',market:15,yours:100,priority:'Unique'},
+  {skill:'Forensic Verification Methodology',market:12,yours:99,priority:'Unique'},
+  {skill:'Grant Reporting',market:68,yours:72,priority:'Adequate'},
+  {skill:'Fundraising / Development',market:74,yours:55,priority:'Gap'},
+  {skill:'Technical AI/ML Engineering',market:91,yours:18,priority:'Skip'},
+  {skill:'Data Analysis',market:70,yours:40,priority:'Gap'},
+  {skill:'Budget Management (multi-line)',market:80,yours:80,priority:'Strength'},
+  {skill:'Coalition Building',market:65,yours:82,priority:'Strength'},
+  {skill:'Content Strategy',market:72,yours:78,priority:'Strength'}
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let jobs = lsLoad('sml_jobs', SEED_JOBS);
+let orgs = lsLoad('sml_orgs', SEED_ORGS);
+let apps = lsLoad('sml_apps', []);
+let activeTheme = 'All';
+let activeRel = 'All';
+
+function persist() {
+  lsSave('sml_jobs', jobs);
+  lsSave('sml_orgs', orgs);
+  lsSave('sml_apps', apps);
+  updateKPIs();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function calcScore(j) {
+  return (j.salaryScore||0)+(j.missionScore||0)+(j.leadershipScore||0)+
+         (j.aiScore||0)+(j.jewishScore||0)+(j.remoteScore||0)+(j.advancementScore||0);
+}
+function salaryColor(s) {
+  if(!s) return '#888';
+  return s>=80000?C.green:s>=70000?C.yellow:C.red;
+}
+function fmtSalary(n) { return n?'$'+n.toLocaleString():'—'; }
+function scoreColor(n) { return n>=80?C.green:n>=60?C.yellow:C.red; }
+function badge(text, color) {
+  return `<span class="badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${text}</span>`;
+}
+function scoreBar(score) {
+  const color = scoreColor(score);
+  return `<div class="score-wrap">
+    <div class="score-track"><div class="score-fill" style="width:${score}%;background:${color}"></div></div>
+    <span class="score-num" style="background:${color}22;color:${color};border:1px solid ${color}44">${score}</span>
+  </div>`;
+}
+function today() { return new Date().toISOString().slice(0,10); }
+function thisMonth() { return new Date().toISOString().slice(0,7); }
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(i) {
+  document.querySelectorAll('.tab-panel').forEach((p,idx)=>{
+    p.classList.toggle('active', idx===i);
+    p.classList.toggle('hidden', idx!==i);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+  if(i===3) renderAnalytics();
+}
+
+// ── KPIs ─────────────────────────────────────────────────────────────────────
+function updateKPIs() {
+  document.getElementById('kpi-green').textContent = jobs.filter(j=>j.salary>=80000).length;
+  document.getElementById('kpi-apply').textContent = jobs.filter(j=>j.status==='Apply').length;
+  document.getElementById('kpi-applied').textContent = apps.length;
+}
+
+// ── TAB 0: JOBS ───────────────────────────────────────────────────────────────
+function renderThemeFilters() {
+  const el = document.getElementById('theme-filters');
+  el.innerHTML = THEMES.map(t=>`
+    <button class="btn-sm ${t===activeTheme?'btn-teal':'btn-muted'}"
+      onclick="setTheme('${t}')" style="font-size:10px;padding:4px 10px">${t.toUpperCase()}</button>
+  `).join('');
+}
+function setTheme(t) { activeTheme=t; renderThemeFilters(); renderJobs(); }
+
+function renderJobs() {
+  const hide70 = document.getElementById('hide70').checked;
+  const list = jobs
+    .filter(j => activeTheme==='All' || j.theme===activeTheme)
+    .filter(j => !hide70 || !j.salary || j.salary>=70000)
+    .sort((a,b) => calcScore(b)-calcScore(a));
+
+  const el = document.getElementById('jobs-list');
+  if(!list.length) {
+    el.innerHTML = `<div style="color:${C.muted};padding:40px 0;text-align:center;font-size:12px">No opportunities match current filters. Add your first one above.</div>`;
+    return;
+  }
+  el.innerHTML = list.map((j,idx) => {
+    const score = calcScore(j);
+    const sc = salaryColor(j.salary);
+    const statusBtns = STATUS_OPTIONS.map(s=>`
+      <button class="btn-sm ${s===j.status?'':'btn-muted'}" 
+        style="font-size:9px;padding:3px 8px;${s===j.status?`background:${STATUS_COLORS[s]}22;color:${STATUS_COLORS[s]};border:1px solid ${STATUS_COLORS[s]}55;border-radius:4px;`:''}"
+        onclick="setJobStatus(${j.id},'${s}')">${s}</button>
+    `).join('');
+    return `<div class="job-card" style="border-left:3px solid ${sc}">
+      <div class="flex" style="justify-content:space-between;gap:12px">
+        <div style="flex:2">
+          <div class="job-title">${j.position}</div>
+          <div class="job-org">${j.org}</div>
+          <div class="job-loc">${j.location} · ${j.remote}</div>
+        </div>
+        <div style="flex:1;text-align:right">
+          <div class="job-salary" style="color:${sc}">${fmtSalary(j.salary)}</div>
+          <div class="mt-4">${badge(j.status, STATUS_COLORS[j.status]||C.muted)}</div>
+        </div>
+        <div style="flex:1;min-width:160px">
+          <div class="label">FIT SCORE</div>
+          ${scoreBar(score)}
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-8 mt-10">
+        ${badge(j.theme, C.blue)}
+        ${j.deadline?badge('DUE '+j.deadline, C.muted):''}
+        <span style="color:${C.muted};font-size:11px;align-self:center">${j.dateFound}</span>
+      </div>
+      ${j.notes?`<div style="margin-top:8px;color:${C.muted};font-size:11px;line-height:1.5">${j.notes}</div>`:''}
+      <div class="status-row">${statusBtns}</div>
+    </div>`;
+  }).join('');
+}
+
+function setJobStatus(id, status) {
+  jobs = jobs.map(j => j.id===id?{...j,status}:j);
+  persist(); renderJobs();
+}
+
+let jobFormOpen = false;
+function toggleJobForm() {
+  jobFormOpen = !jobFormOpen;
+  document.getElementById('job-form').classList.toggle('hidden', !jobFormOpen);
+  if(jobFormOpen) document.getElementById('f-date').value = today();
+}
+
+function saveJob() {
+  const org = document.getElementById('f-org').value.trim();
+  const pos = document.getElementById('f-pos').value.trim();
+  if(!org||!pos) { alert('Organization and Position are required.'); return; }
+  const job = {
+    id: Date.now(),
+    dateFound: document.getElementById('f-date').value || today(),
+    org, position: pos,
+    salary: parseInt(document.getElementById('f-sal').value)||0,
+    location: document.getElementById('f-loc').value,
+    remote: document.getElementById('f-remote').value,
+    theme: document.getElementById('f-theme').value,
+    deadline: document.getElementById('f-dead').value,
+    status: document.getElementById('f-status').value,
+    notes: document.getElementById('f-notes').value,
+    salaryScore: parseInt(document.getElementById('fs-sal').value)||0,
+    missionScore: parseInt(document.getElementById('fs-mis').value)||0,
+    leadershipScore: parseInt(document.getElementById('fs-lead').value)||0,
+    aiScore: parseInt(document.getElementById('fs-ai').value)||0,
+    jewishScore: parseInt(document.getElementById('fs-jew').value)||0,
+    remoteScore: parseInt(document.getElementById('fs-rem').value)||0,
+    advancementScore: parseInt(document.getElementById('fs-adv').value)||0,
+  };
+  jobs = [job, ...jobs];
+  persist(); toggleJobForm(); renderJobs();
+}
+
+// ── TAB 1: ORGS ───────────────────────────────────────────────────────────────
+function renderRelFilters() {
+  const el = document.getElementById('rel-filters');
+  el.innerHTML = REL_OPTIONS.map(r=>`
+    <button class="btn-sm ${r===activeRel?'btn-gold':'btn-muted'}"
+      onclick="setRel('${r}')" style="font-size:10px;padding:4px 10px">${r.toUpperCase()}</button>
+  `).join('');
+}
+function setRel(r) { activeRel=r; renderRelFilters(); renderOrgs(); }
+
+function renderOrgs() {
+  const filtered = orgs.filter(o => activeRel==='All' || o.relationshipStatus===activeRel);
+  const el = document.getElementById('orgs-list');
+  el.innerHTML = filtered.map((o,fi) => {
+    const i = orgs.indexOf(o);
+    const warm = ['Warm','Active','Met'].includes(o.relationshipStatus);
+    return `<div class="org-card" style="border-left:3px solid ${warm?C.gold:C.border}">
+      <div class="flex" style="justify-content:space-between;gap:12px">
+        <div style="flex:3">
+          <div class="fw-700 mb-4">${o.org}</div>
+          <div class="muted f-11 lh-15 mb-8">${o.mission}</div>
+          ${o.contacts?`<div class="f-11"><span class="muted">Key Contact: </span><span style="color:${C.gold}">${o.contacts}</span></div>`:''}
+        </div>
+        <div style="flex:1">
+          <div class="label">RELATIONSHIP</div>
+          <select style="width:120px" onchange="updateOrg(${i},'relationshipStatus',this.value)">
+            ${['Cold','Warm','Active','Met','Applied'].map(r=>`<option ${r===o.relationshipStatus?'selected':''}>${r}</option>`).join('')}
+          </select>
+          ${o.lastContact?`<div class="muted f-10 mt-4">Last: ${o.lastContact}</div>`:''}
+        </div>
+      </div>
+      ${o.actions?`<div class="mt-8 f-11" style="color:${C.teal}">→ ${o.actions}</div>`:''}
+      <div class="mt-8">
+        <textarea style="height:42px;font-size:11px" placeholder="Notes..." 
+          onchange="updateOrg(${i},'notes',this.value)">${o.notes}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateOrg(i, field, value) {
+  orgs[i][field] = value;
+  persist();
+}
+
+// ── TAB 2: APPLICATIONS ───────────────────────────────────────────────────────
+let appFormOpen = false;
+function toggleAppForm() {
+  appFormOpen = !appFormOpen;
+  document.getElementById('app-form').classList.toggle('hidden', !appFormOpen);
+  if(appFormOpen) {
+    document.getElementById('af-date').value = today();
+    const sel = document.getElementById('af-job');
+    sel.innerHTML = '<option value="">Select...</option>' +
+      jobs.map(j=>`<option value="${j.id}">${j.org} — ${j.position}</option>`).join('');
+  }
+}
+
+function saveApp() {
+  const app = {
+    id: Date.now(),
+    jobId: document.getElementById('af-job').value,
+    dateApplied: document.getElementById('af-date').value,
+    followUpDate: document.getElementById('af-followup').value,
+    interviewDates: document.getElementById('af-interviews').value,
+    outcome: document.getElementById('af-outcome').value,
+    lessons: document.getElementById('af-lessons').value
+  };
+  apps = [app, ...apps];
+  persist(); toggleAppForm(); renderApps();
+}
+
+function renderApps() {
+  const el = document.getElementById('apps-list');
+  if(!apps.length) {
+    el.innerHTML = `<div style="color:${C.muted};padding:40px 0;text-align:center;font-size:12px">No applications logged yet. When you submit your first application, track it here.</div>`;
+    return;
+  }
+  el.innerHTML = apps.map(a => {
+    const job = jobs.find(j=>String(j.id)===String(a.jobId));
+    const outcomeColor = a.outcome==='Offer'?C.green:a.outcome==='Rejected'?C.red:C.blue;
+    return `<div class="card">
+      <div class="fw-700">${job?`${job.org} — ${job.position}`:'Unknown Position'}</div>
+      <div class="flex flex-wrap gap-20 mt-6 f-11">
+        <span><span class="muted">Applied: </span>${a.dateApplied}</span>
+        ${a.followUpDate?`<span><span class="muted">Follow-up: </span>${a.followUpDate}</span>`:''}
+        ${a.interviewDates?`<span><span class="muted">Interview: </span>${a.interviewDates}</span>`:''}
+        ${a.outcome?badge(a.outcome, outcomeColor):''}
+      </div>
+      ${a.lessons?`<div style="margin-top:8px;color:${C.muted};font-size:11px;line-height:1.5">↳ ${a.lessons}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── TAB 3: ANALYTICS ─────────────────────────────────────────────────────────
+function renderAnalytics() {
+  const month = thisMonth();
+  const monthJobs = jobs.filter(j=>j.dateFound&&j.dateFound.startsWith(month));
+  const salaries = jobs.filter(j=>j.salary>0).map(j=>j.salary);
+  const avg = salaries.length ? Math.round(salaries.reduce((a,b)=>a+b,0)/salaries.length) : 0;
+  const max = salaries.length ? Math.max(...salaries) : 0;
+  const interviews = apps.filter(a=>['Interview','Finalist'].includes(a.outcome)||a.interviewDates);
+  const intRate = apps.length ? Math.round(interviews.length/apps.length*100) : 0;
+  const green = jobs.filter(j=>j.salary>=80000).length;
+  const yellow = jobs.filter(j=>j.salary>=70000&&j.salary<80000).length;
+  const red = jobs.filter(j=>j.salary>0&&j.salary<70000).length;
+
+  // KPIs
+  document.getElementById('stat-cards').innerHTML = [
+    ['Jobs Found This Month', monthJobs.length, C.teal],
+    ['Total Opportunities', jobs.length, C.blue],
+    ['Applications Submitted', apps.length, C.purple],
+    ['Interview Rate', intRate+'%', C.green],
+    ['Avg Salary Found', fmtSalary(avg), C.gold],
+    ['Highest Salary', fmtSalary(max), C.green],
+  ].map(([label,val,color])=>`
+    <div class="stat-card">
+      <div class="stat-num" style="color:${color}">${val}</div>
+      <div class="stat-lbl">${label.toUpperCase()}</div>
+    </div>`).join('');
+
+  // Salary tiers
+  const total = jobs.length || 1;
+  document.getElementById('salary-tiers').innerHTML = `
+    <div style="color:${C.gold};font-size:11px;letter-spacing:2px;margin-bottom:12px">SALARY TIER BREAKDOWN</div>
+    ${[['$80k+ (Target)',green,C.green],['$70–79k (Acceptable)',yellow,C.yellow],['<$70k (Below target)',red,C.red]].map(([label,count,color])=>`
+      <div class="flex" style="align-items:center;gap:12px;margin-bottom:8px">
+        <div style="width:160px;font-size:11px;color:${C.muted}">${label}</div>
+        <div style="flex:1;height:14px;background:${C.border};border-radius:2px">
+          <div style="width:${Math.round(count/total*100)}%;height:100%;background:${color};border-radius:2px;transition:width 0.4s"></div>
+        </div>
+        <div style="width:24px;text-align:right;color:${color};font-weight:700">${count}</div>
+      </div>`).join('')}`;
+
+  // Theme + Status breakdown
+  const themeCount = {};
+  jobs.forEach(j=>{ themeCount[j.theme]=(themeCount[j.theme]||0)+1; });
+  const statusCount = {};
+  jobs.forEach(j=>{ statusCount[j.status]=(statusCount[j.status]||0)+1; });
+
+  document.getElementById('analytics-grids').innerHTML = `
+    <div class="card">
+      <div style="color:${C.gold};font-size:11px;letter-spacing:2px;margin-bottom:12px">BY CAREER THEME</div>
+      ${Object.entries(themeCount).sort((a,b)=>b[1]-a[1]).map(([t,c])=>`
+        <div class="flex" style="justify-content:space-between;margin-bottom:6px;font-size:11px">
+          <span>${t}</span><span style="color:${C.teal};font-weight:700">${c}</span>
+        </div>`).join('')||`<div class="muted f-11">Add opportunities to see theme breakdown.</div>`}
+    </div>
+    <div class="card">
+      <div style="color:${C.gold};font-size:11px;letter-spacing:2px;margin-bottom:12px">BY STATUS</div>
+      ${Object.entries(statusCount).sort((a,b)=>b[1]-a[1]).map(([s,c])=>`
+        <div class="flex" style="justify-content:space-between;align-items:center;margin-bottom:6px">
+          ${badge(s, STATUS_COLORS[s]||C.muted)}
+          <span style="font-weight:700">${c}</span>
+        </div>`).join('')||`<div class="muted f-11">Add opportunities to see status breakdown.</div>`}
+    </div>`;
+}
+
+// ── TAB 4: SKILLS ─────────────────────────────────────────────────────────────
+function renderSkills() {
+  document.getElementById('skills-legend').innerHTML = Object.entries(PRIORITY_COLORS).map(([label,color])=>`
+    <div class="flex" style="align-items:center;gap:6px;font-size:10px;color:${C.muted}">
+      <div style="width:10px;height:10px;border-radius:2px;background:${color}"></div>${label}
+    </div>`).join('');
+
+  document.getElementById('skills-list').innerHTML = SKILLS_DATA.map(item=>{
+    const color = PRIORITY_COLORS[item.priority]||C.muted;
+    return `<div class="card" style="padding:12px 16px;margin-bottom:10px">
+      <div class="flex" style="justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-weight:600;font-size:12px">${item.skill}</div>
+        ${badge(item.priority, color)}
+      </div>
+      <div class="flex gap-16">
+        <div style="flex:1">
+          <div class="label">MARKET DEMAND</div>
+          <div class="flex" style="align-items:center;gap:8px">
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${item.market}%;background:${C.blue}"></div></div>
+            <span style="color:${C.blue};font-size:11px;width:28px;text-align:right">${item.market}%</span>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="label">YOUR LEVEL</div>
+          <div class="flex" style="align-items:center;gap:8px">
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${item.yours}%;background:${color}"></div></div>
+            <span style="color:${color};font-size:11px;width:28px;text-align:right">${item.yours}%</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderThemeFilters();
+renderJobs();
+renderRelFilters();
+renderOrgs();
+renderApps();
+renderSkills();
+updateKPIs();
+</script>
+</body>
+</html>
